@@ -1,8 +1,7 @@
 package com.lahssini.tp6ebankingbackend.web;
 
-import com.lahssini.tp6ebankingbackend.dtos.AccountHistoryDTO;
-import com.lahssini.tp6ebankingbackend.dtos.AccountOperationDTO;
-import com.lahssini.tp6ebankingbackend.dtos.BankAccountDTO;
+import com.lahssini.tp6ebankingbackend.dtos.*;
+import com.lahssini.tp6ebankingbackend.exceptions.BalanceNotSufficientException;
 import com.lahssini.tp6ebankingbackend.exceptions.BankAccountNotFoundException;
 import com.lahssini.tp6ebankingbackend.services.BankAccountService;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +38,21 @@ public List<BankAccountDTO> listAccounts(){
     @RequestParam(name = "size",defaultValue = "5") int size) throws BankAccountNotFoundException {
     return bankAccountService.getAccountHistory(accountId,page,size);
   }
-
+  @PostMapping("/accounts/debit")
+  public DebitDTO debit(@RequestBody DebitDTO debitDTO) throws BankAccountNotFoundException, BalanceNotSufficientException, BalanceNotSufficientException {
+    this.bankAccountService.debit(debitDTO.getAccountId(),debitDTO.getAmount(),debitDTO.getDescription());
+    return debitDTO;
+  }
+  @PostMapping("/accounts/credit")
+  public CreditDTO credit(@RequestBody CreditDTO creditDTO) throws BankAccountNotFoundException, BalanceNotSufficientException {
+    this.bankAccountService.credit(creditDTO.getAccountId(),creditDTO.getAmount(),creditDTO.getDescription());
+    return creditDTO;
+  }
+  @PostMapping("/accounts/transfer")
+  public void transfer(@RequestBody com.lahssini.tp6ebankingbackend.dtos.TransferRequestDTO transferRequestDTO) throws BankAccountNotFoundException, BalanceNotSufficientException {
+    this.bankAccountService.transfer(
+            transferRequestDTO.getAccountSource(),
+            transferRequestDTO.getAccountDestination(),
+            transferRequestDTO.getAmount());
+  }
 }

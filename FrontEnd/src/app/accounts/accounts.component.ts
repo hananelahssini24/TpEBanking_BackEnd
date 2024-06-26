@@ -55,7 +55,7 @@ export class AccountsComponent implements  OnInit {
     if(operationType=='DEBIT'){
       this.accountService.debit(accountId, amount,description).subscribe({
         next : (data)=>{
-          alert("Success Credit");
+          alert("Success  Credit");
           this.operationFromGroup.reset();
           this.handleSearchAccount();
         },
